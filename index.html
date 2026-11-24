@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nousagi Huang - Hướng dẫn bot</title>
+<style>
+:root{--bg:#0d0b14;--card:#171325;--line:#2a2340;--txt:#ece8f7;--mut:#9a92b5;--acc:#ff4d6d;--acc2:#8b5cf6}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.6}
+a{color:inherit}
+nav{position:sticky;top:0;z-index:10;background:rgba(13,11,20,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;gap:4px;padding:10px 14px;overflow-x:auto;white-space:nowrap}
+nav b{margin-right:10px;color:var(--acc)}
+nav a{text-decoration:none;color:var(--mut);padding:4px 10px;border-radius:8px;font-size:14px}
+nav a:hover{background:var(--card);color:var(--txt)}
+.hero{text-align:center;padding:56px 18px 40px;background:radial-gradient(circle at 50% 0,#2a1740 0,transparent 65%)}
+.hero h1{font-size:clamp(30px,8vw,52px);background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mut);max-width:520px;margin:12px auto 22px}
+.btn{display:inline-block;padding:10px 20px;border-radius:10px;background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;text-decoration:none;font-weight:600;border:0;cursor:pointer;font-size:15px}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--txt);margin-left:6px}
+main{max-width:860px;margin:auto;padding:0 16px 60px}
+section{padding-top:44px}
+h2{font-size:24px;margin-bottom:6px}
+.sub{color:var(--mut);margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h3{font-size:16px;margin-bottom:4px}
+.card p{color:var(--mut);font-size:14px}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 52px;margin-bottom:10px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:14px;top:12px;width:26px;height:26px;border-radius:50%;background:var(--acc2);display:grid;place-items:center;font-weight:700;font-size:14px}
+code{background:#241d3a;padding:2px 7px;border-radius:6px;font-family:ui-monospace,Menlo,monospace;font-size:13px;color:#ffb3c1}
+.rar{display:flex;flex-wrap:wrap;gap:8px}
+.rar span{padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px;border:1px solid currentColor}
+.c{color:#b0b0b8}.u{color:#4ade80}.r{color:#60a5fa}.e{color:#c084fc}
+.l{color:#fbbf24;box-shadow:0 0 12px #fbbf2455}
+.m{color:#ff4d6d;box-shadow:0 0 16px #ff4d6d77}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{background:var(--card);border:1px solid var(--line);color:var(--mut);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px}
+.tabs button.on{background:var(--acc2);color:#fff;border-color:var(--acc2)}
+input[type=search]{width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:15px;margin-bottom:12px}
+.cmd{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:8px}
+.cmd .d{color:var(--mut);font-size:14px}
+.cmd button{background:#241d3a;color:var(--txt);border:0;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:12px;flex:none}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+summary{cursor:pointer;font-weight:600}
+details p{color:var(--mut);margin-top:8px;font-size:14px}
+footer{text-align:center;color:var(--mut);font-size:13px;padding:30px 16px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<nav><b>Nousagi</b><a href="#start">Bắt đầu</a><a href="#game">Game</a><a href="#pets">Thú cưng</a><a href="#lenh">Lệnh</a><a href="#faq">FAQ</a></nav>
+
+<header class="hero">
+  <h1>Nousagi Huang</h1>
+  <p>Bot Discord kèm mini game Nousagi Arena. Nuôi thú, kiếm Nousa Coin, săn đồ hiếm và leo bảng xếp hạng.</p>
+  <a class="btn" href="#start">Bắt đầu chơi</a><a class="btn ghost" href="#lenh">Xem lệnh</a>
+</header>
+
+<main>
+<section id="start">
+  <h2>Bắt đầu nhanh</h2>
+  <p class="sub">Chỉ cần 4 bước.</p>
+  <ol class="steps">
+    <li>Mời bot vào server (thay bằng link mời của bạn).</li>
+    <li>Gõ <code class="pf">n help</code> để xem danh sách lệnh.</li>
+    <li>Gõ <code class="pf">n daily</code> để nhận Nousa Coin mỗi ngày.</li>
+    <li>Gõ <code class="pf">n hunt</code> để săn thú cưng đầu tiên.</li>
+  </ol>
+</section>
+
+<section id="game">
+  <h2>Nousagi Arena</h2>
+  <p class="sub">Những thứ cần biết về game.</p>
+  <div class="grid">
+    <div class="card"><h3>Nousa Coin</h3><p>Tiền tệ chính của game. Kiếm từ daily, săn thú, chiến đấu. Dùng để mua lootbox và weapon crate.</p></div>
+    <div class="card"><h3>Thú cưng</h3><p>Có 30 thú chia theo 6 độ hiếm. Mỗi thú có hệ nguyên tố riêng: lửa, nước, mộc, sấm, bóng tối.</p></div>
+    <div class="card"><h3>Vũ khí</h3><p>Cũng chia 6 độ hiếm. Gắn cho thú để tăng sức mạnh trong trận đấu.</p></div>
+    <div class="card"><h3>Gem</h3><p>4 loại gem buff, mỗi loại có đủ các độ hiếm. Gắn vào thú để nhận hiệu ứng cộng thêm.</p></div>
+    <div class="card"><h3>Lootbox và Crate</h3><p>Lootbox cho thú hoặc gem. Weapon crate cho vũ khí. Độ hiếm càng cao thì tỉ lệ rơi càng thấp.</p></div>
+    <div class="card"><h3>Shard</h3><p>Mảnh vỡ nhận được khi trùng đồ. Gom đủ để đổi hoặc nâng cấp.</p></div>
+  </div>
+</section>
+
+<section id="pets">
+  <h2>Độ hiếm</h2>
+  <p class="sub">Từ thấp đến cao. Áp dụng cho thú, vũ khí và gem.</p>
+  <div class="rar">
+    <span class="c">Common</span><span class="u">Uncommon</span><span class="r">Rare</span><span class="e">Epic</span><span class="l">Legend</span><span class="m">Mythical</span>
+  </div>
+</section>
+
+<section id="lenh">
+  <h2>Danh sách lệnh</h2>
+  <p class="sub">Bấm "Copy" để chép lệnh. Tiền tố hiện tại: <code id="pfShow"></code></p>
+  <input type="search" id="q" placeholder="Tìm lệnh...">
+  <div class="tabs" id="tabs"></div>
+  <div id="list"></div>
+</section>
+
+<section id="faq">
+  <h2>Câu hỏi thường gặp</h2>
+  <p class="sub">&nbsp;</p>
+  <details><summary>Bot không trả lời lệnh?</summary><p>Kiểm tra bot có quyền đọc và gửi tin nhắn trong kênh, và bạn gõ đúng tiền tố.</p></details>
+  <details><summary>Làm sao có nhiều Nousa Coin?</summary><p>Nhận daily mỗi ngày, săn thú thường xuyên, và thắng trận đấu.</p></details>
+  <details><summary>Độ hiếm nào tốt nhất?</summary><p>Mythical là cao nhất hiện tại. Sau này có thể thêm bậc mới.</p></details>
+  <details><summary>Báo lỗi hoặc góp ý ở đâu?</summary><p>Vào server hỗ trợ và nhắn trong kênh góp ý.</p></details>
+</section>
+</main>
+
+<footer>Nousagi Huang &middot; Làm bằng tình yêu và một chút code</footer>
+
+<script>
+/* ====== CHỈNH Ở ĐÂY ====== */
+var PREFIX = "n";
+var COMMANDS = [
+  {cat:"Cơ bản", c:"help", d:"Xem danh sách lệnh"},
+  {cat:"Cơ bản", c:"daily", d:"Nhận Nousa Coin mỗi ngày"},
+  {cat:"Cơ bản", c:"profile", d:"Xem hồ sơ của bạn"},
+  {cat:"Cơ bản", c:"cash", d:"Xem số Nousa Coin đang có"},
+  {cat:"Thú cưng", c:"hunt", d:"Săn thú cưng"},
+  {cat:"Thú cưng", c:"zoo", d:"Xem bộ sưu tập thú"},
+  {cat:"Thú cưng", c:"pet", d:"Xem thông tin một thú"},
+  {cat:"Chiến đấu", c:"battle", d:"Đấu với người chơi khác"},
+  {cat:"Chiến đấu", c:"weapon", d:"Xem và gắn vũ khí"},
+  {cat:"Chiến đấu", c:"gem", d:"Xem và gắn gem"},
+  {cat:"Cửa hàng", c:"lootbox", d:"Mở lootbox"},
+  {cat:"Cửa hàng", c:"crate", d:"Mở weapon crate"},
+  {cat:"Cửa hàng", c:"shard", d:"Xem và dùng shard"}
+];
+/* ========================= */
+document.querySelectorAll(".pf").forEach(function(e){e.textContent=e.textContent.replace(/^n /,PREFIX+" ")});
+document.getElementById("pfShow").textContent=PREFIX;
+var cats=["Tất cả"].concat(COMMANDS.map(function(x){return x.cat}).filter(function(v,i,a){return a.indexOf(v)===i}));
+var cur="Tất cả",tabs=document.getElementById("tabs"),list=document.getElementById("list"),q=document.getElementById("q");
+function render(){
+  tabs.innerHTML="";
+  cats.forEach(function(c){var b=document.createElement("button");b.textContent=c;if(c===cur)b.className="on";b.onclick=function(){cur=c;render()};tabs.appendChild(b)});
+  var s=q.value.toLowerCase();list.innerHTML="";
+  COMMANDS.filter(function(x){return (cur==="Tất cả"||x.cat===cur)&&(x.c+x.d).toLowerCase().indexOf(s)>-1}).forEach(function(x){
+    var full=PREFIX+" "+x.c,r=document.createElement("div");r.className="cmd";
+    r.innerHTML='<div><code></code><div class="d"></div></div><button>Copy</button>';
+    r.querySelector("code").textContent=full;r.querySelector(".d").textContent=x.d;
+    r.querySelector("button").onclick=function(e){var b=e.target;try{navigator.clipboard.writeText(full).then(function(){b.textContent="Đã chép"})}catch(_){b.textContent="Lỗi"}setTimeout(function(){b.textContent="Copy"},1200)};
+    list.appendChild(r);
+  });
+}
+q.oninput=render;render();
+</script>
+</body>
+</html>
