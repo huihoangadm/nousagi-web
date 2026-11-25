@@ -15,7 +15,7 @@
   --bg:#0b0a12;--bg2:#100e19;--panel:#151320;--panel2:#1b1829;--line:#2a2540;--line2:#3a3356;
   --txt:#eeeaf8;--mut:#9d96b8;--dim:#6f6889;
   --gold:#ffc24a;--gold2:#ff9d2e;--crim:#ff3d6e;--vio:#8b5cf6;--cyan:#38d9f5;
-  --rc:#b4b4c2;--ru:#4ade80;--rr:#60a5fa;--re:#c084fc;--rl:#fbbf24;--rm:#ff4d6d;
+  --rc:#b4b4c2;--ru:#4ade80;--rr:#60a5fa;--re:#c084fc;--rl:#fbbf24;--rm:#ff4d6d;--rf:#7dd3fc;--rs:#f472b6;
   --fire:#ff7a3d;--water:#3db5ff;--wood:#4fd17a;--thunder:#ffd23d;--dark:#a77bff;
   --r:14px;--side:268px;
 }
@@ -97,7 +97,7 @@ a.card:hover{border-color:var(--line2);transform:translateY(-2px);box-shadow:0 1
 .note.v{border-color:#3d2f6b;background:linear-gradient(90deg,rgba(139,92,246,.12),transparent)}
 .note.r{border-color:#5a2236;background:linear-gradient(90deg,rgba(255,61,110,.12),transparent)}
 ul.li{padding-left:20px;margin:6px 0}ul.li li{margin:4px 0}
-.c-c{color:var(--rc)}.c-u{color:var(--ru)}.c-r{color:var(--rr)}.c-e{color:var(--re)}.c-l{color:var(--rl)}.c-m{color:var(--rm)}
+.c-c{color:var(--rc)}.c-u{color:var(--ru)}.c-r{color:var(--rr)}.c-e{color:var(--re)}.c-l{color:var(--rl)}.c-m{color:var(--rm)}.c-f{color:var(--rf)}.c-s{color:var(--rs)}
 .c-l,.c-m{text-shadow:0 0 12px currentColor}
 .el-fire{color:var(--fire)}.el-water{color:var(--water)}.el-wood{color:var(--wood)}.el-thunder{color:var(--thunder)}.el-dark{color:var(--dark)}
 
@@ -367,11 +367,13 @@ const RAR = {
   r:{n:"Rare",w:7200,v:60,mult:1.6,id:"1573701191097917461",fb:"🔵"},
   e:{n:"Epic",w:1600,v:300,mult:2.1,id:"1573701193597976606",fb:"🟣"},
   l:{n:"Legendary",w:120,v:2000,mult:2.8,id:"1573701196068159568",fb:"🟡"},
-  m:{n:"Mythic",w:8,v:15000,mult:3.6,id:"1573701199591383271",fb:"🔴"}
+  m:{n:"Mythic",w:8,v:15000,mult:3.6,id:"1573701199591383271",fb:"🔴"},
+  f:{n:"Fabled",w:1,v:50000,mult:4.4,id:"1575070370917257286",fb:"🌠"},
+  s:{n:"Special",w:0,v:2500,mult:3.9,id:"1575070374356320326",fb:"🌸"}
 };
-const ORDER = ["c","u","r","e","l","m"];
+const ORDER = ["c","u","r","e","l","m","f","s"];
 const RW = ORDER.reduce((s,k)=>s+RAR[k].w,0);
-const SAC = {c:1,u:3,r:10,e:50,l:400,m:3000};
+const SAC = {c:1,u:3,r:10,e:50,l:400,m:3000,f:25000,s:1500};
 const LOOTBOX = {u:6200,r:2800,e:850,l:140,m:10};
 const rIcon = k => ic(RAR[k].id, RAR[k].fb);
 
@@ -402,7 +404,11 @@ const PETS = [
  ["l5","🦇","Dơi Huyết Nguyệt","dark",110,33,13,18,"1573739379682451456"],
  ["m1","🦖","Bạo Long Cổ Đại","fire",160,38,18,10,"1573739690962587698"],["m2","🐋","Kình Ngư Thái Cổ","water",190,32,22,8,"1573739702148800844"],
  ["m3","🦬","Thần Ngưu Sấm","thunder",170,35,20,10,"1573739698961252484"],["m4","🐢","Huyền Vũ","wood",200,28,28,6,"1573739685191229440"],
- ["m5","👁️","Hư Không Nhãn","dark",140,40,15,16,"1573739695471329482"]
+ ["m5","👁️","Hư Không Nhãn","dark",140,40,15,16,"1573739695471329482"],
+ ["f1","🌠","Thiên Long Tinh Hà","thunder",200,44,22,14,"1575070484800868433"],["f2","🌞","Kim Ô Thái Dương","fire",180,48,18,16,"1575070487678160896"],
+ ["f3","🌊","Thủy Mẫu Vạn Hải","water",230,38,26,10,"1575070476844408922"],
+ ["s1","🐰","Thỏ Nguyệt Nousagi","dark",170,40,20,18,"1575070473895809035"],["s2","🌸","Hồ Ly Anh Đào","wood",175,39,21,15,"1575070481965387846"],
+ ["s3","❄️","Phượng Tuyết Linh","water",160,42,18,17,"1575070479205670932"]
 ].map(a=>({cid:a[0],fb:a[1],name:a[2],el:a[3],hp:a[4],atk:a[5],df:a[6],spd:a[7],id:a[8],r:a[0][0]}));
 const pIcon = p => ic(p.id, p.fb);
 function pstats(p, lv){
@@ -518,11 +524,13 @@ const CMDS = [
  ["buy","Mini game","buy <mã> [số]","Mua món trong cửa hàng theo mã.","buy 3 2",[],"/game buy"],
  ["inv","Mini game","inv","Túi đồ.","inv",["i","inventory"],"/game inventory"],
  ["use","Mini game","use <mã|tên> [số|all]","Dùng vật phẩm, mở hộp, kích hoạt ngọc.","use lootbox all",["open"],"/game use"],
- ["hunt","Mini game","hunt","Đi săn sinh vật (15 giây/lần), có thể nhặt ngọc, hộp, Bait, Shards.","hunt",["h"],"/game hunt"],
+ ["hunt","Mini game","hunt","Đi săn sinh vật (7 giây/lần), có thể nhặt ngọc, hộp, Bait, Shards.","hunt",["h"],"/game hunt"],
  ["zoo","Mini game","zoo [@người]","Sở thú: các sinh vật đã bắt.","zoo",["z","dex"],"/game zoo"],
  ["pet","Mini game","pet <tên>","Chỉ số chi tiết của một sinh vật.","pet Rồng Lửa",[],"/game pet"],
  ["sell","Mini game","sell <tên|độ hiếm|all> [số] · sell weapon <mã|độ hiếm>","Bán sinh vật lấy xu, hoặc bán vũ khí lấy Shards.","sell common",[],"/game sell"],
- ["team","Mini game","team [add <tên> [ô]|remove <ô>]","Xem và chỉnh đội hình 3 pet.","team add Cáo Lửa",["t"],"/game team"],
+ ["team","Mini game","team [add <tên> [ô]|remove <ô>|rename <tên>]","Xem và chỉnh đội hình 3 pet, đổi tên đội.","team add Cáo Lửa",["t"],"/game team"],
+ ["rename","Mini game","rename <tên pet> <tên mới|reset>","Đặt tên riêng cho pet (hiện trong !team và trận đấu, tối đa 20 ký tự).","rename Cáo Lửa Đốm",["petname","doiten"],""],
+ ["bossremind","Hoạt động","bossremind [off|on|server off|on|now]","Nhắc đánh Boss mỗi 4 giờ cho người chưa đánh hôm nay.","bossremind off",["nhacboss"],""],
  ["weapons","Mini game","weapons","Kho vũ khí dạng slide. !wp <mã> xem chi tiết một vũ khí.","weapons",["w","wp"],"/game weapons"],
  ["wpinfo","Mini game","wpinfo","Bách khoa vũ khí: 12 loại, Tuyệt Kỹ, 16 Ấn Ký, thanh Nộ.","wpinfo",[],""],
  ["equip","Mini game","equip <mã> <tên pet>","Trang bị vũ khí cho pet.","equip W12 Cáo Lửa",[],"/game equip"],
@@ -543,7 +551,7 @@ const CMDS = [
  ["boss","Hoạt động","boss [fight]","World Boss của server (3 lượt mỗi ngày).","boss fight",["bs"],""],
  ["squad","Hoạt động","squad [create|invite|leave|kick|disband]","Squad đánh boss (tối đa 4 người).","squad create",[],""],
  ["tower","Hoạt động","tower [climb]","Tháp Thử Thách 100 tầng, có Shards mỗi tầng.","tower climb",["tw"],""],
- ["bless","Hoạt động","bless [pet <tên>|weapon <mã>]","Blessing Forge cho pet và vũ khí.","bless pet Cáo Lửa",[],""],
+ ["bless","Hoạt động","bless [weapon <mã>]","Blessing Forge cho vũ khí.","bless weapon 101",[],""],
  ["thanthu","Hoạt động","thanthu [fight|feed|care|evolve]","Thần Thú Bạch Hổ (mở ở cấp 50).","thanthu",["beast","bachho"],"/thanthu"],
  ["server","Quản lí","server","Bảng cài đặt server: ngôn ngữ, prefix, kênh chơi game, báo lên cấp, kênh thông báo, Raid.","server",[],"/server"],
  ["disable","Quản lí","disable [#kênh|all]","Tắt bot ở một kênh (bot không trả lời, không tính XP).","disable",[],""],
@@ -553,7 +561,7 @@ const CMDS = [
 const CMD_GROUPS = ["Tất cả","Mini game","Hoạt động","Hồ sơ","Chung","Quản lí"];
 
 /* ===== Hoạt động ===== */
-const TRAITS = [["⏱️","Efficiency","số sinh vật mỗi giờ",200],["⏳","Duration","thời gian tối đa (đến 24 giờ)",235],["🪙","Cost","xu mỗi phút, càng nâng càng rẻ",8],
+const TRAITS = [["⏱️","Efficiency","số sinh vật mỗi giờ",200],["⏳","Duration","mở các mốc chuyến đi dài hơn (Lv 35 / 75 / 115)",235],["🪙","Cost","xu mỗi phút, càng nâng càng rẻ",8],
   ["🔧","Gain","Essence mỗi giờ",200],["⚔️","Experience","XP cho pet trong đội mỗi giờ",200],["📡","Radar","tăng tỉ lệ gặp sinh vật Rare trở lên",50]];
 const ZONES = [["wood","Rừng Cổ Mộc","gembag","Gem Bag x2"],["water","Biển Sâu Thủy Cung","lootbox","Lootbox x2"],["thunder","Đỉnh Lôi Vân","crate","Weapon Crate x2"],
   ["fire","Núi Lửa Viêm","crystal","Crystal x2"],["dark","Vực Hư Ám","spark","Essence +25%"]];
@@ -577,7 +585,7 @@ const SLOTS = [["sl_cherry","Cherry",30,3],["sl_lemon","Chanh",25,4],["sl_grape"
 const TT = [["Arena",[["tt_lv10","Tân Binh Arena","c","Đạt cấp 10"],["tt_lv25","Chiến Binh Arena","r","Đạt cấp 25"],["tt_lv50","Bậc Thầy Arena","e","Đạt cấp 50"],["tt_lv100","Truyền Thuyết Arena","m","Đạt cấp 100"]]],
  ["Thợ Săn",[["tt_hunt100","Thợ Săn Tập Sự","c","Săn 100 lần"],["tt_hunt1k","Thợ Săn Lão Luyện","r","Săn 1.000 lần"],["tt_hunt10k","Huyền Thoại Săn Bắn","l","Săn 10.000 lần"]]],
  ["Tháp",[["tt_tower50","Kẻ Leo Tháp","r","Vượt tầng 50"],["tt_tower100","Kẻ Chinh Phục Tháp","l","Vượt tầng 100"]]],
- ["Khác",[["tt_collector","Nhà Sưu Tầm","e","Hoàn thành Dex (30 loài)"],["tt_streak50","Bất Bại","e","Chuỗi thắng 50"],["tt_bossmvp","Đồ Tể Boss","l","MVP khi hạ World Boss"],["tt_divine","Được Thần Chọn","m","Danh hiệu bí mật · tự khám phá"]]]];
+ ["Khác",[["tt_collector","Nhà Sưu Tầm","e","Hoàn thành Dex (30 loài đầu)"],["tt_streak50","Bất Bại","e","Chuỗi thắng 50"],["tt_bossmvp","Đồ Tể Boss","l","MVP khi hạ World Boss"],["tt_divine","Được Thần Chọn","m","Danh hiệu bí mật · tự khám phá"]]]];
 const FORMS = [[1,"Sơ Sinh","form0",0],[10,"Ấu Hổ","form1",1],[25,"Thiếu Hổ","form2",2],[40,"Linh Hổ","form3",3],[60,"Thần Hổ","form4",5]];
 const BUFF_ATK=[3,5,7,9,12], BUFF_HP=[0,3,5,7,10];
 const BEAST_SHOP = [[701,"b_meat","Linh Nhục",15,"Thịt linh thú, +150 EXP cho thần thú"],[702,"b_blood","Huyết Tinh Hổ Phách",70,"Tinh huyết quý, +900 EXP cho thần thú"],
@@ -670,7 +678,7 @@ P.home = () => {
   </section>
   <div class="stats">
     <div class="stat"><b>${CMDS.length}+</b><span>lệnh</span></div>
-    <div class="stat"><b>30</b><span>sinh vật · 6 độ hiếm</span></div>
+    <div class="stat"><b>36</b><span>sinh vật · 8 độ hiếm</span></div>
     <div class="stat"><b>12</b><span>loại vũ khí</span></div>
     <div class="stat"><b>16</b><span>Ấn Ký</span></div>
     <div class="stat"><b>5</b><span>Raid Boss</span></div>
@@ -689,7 +697,7 @@ P.home = () => {
   </div>
   <h2>Khám phá</h2>
   <div class="grid">
-    ${[["pets","Bách khoa sinh vật","30 loài, chỉ số theo cấp"],["weapons","Vũ khí & Tuyệt Kỹ","Máy tính sức mạnh vũ khí"],["marks","Ấn Ký","16 Ấn Ký và giá trị"],
+    ${[["pets","Bách khoa sinh vật","36 loài, chỉ số theo cấp"],["weapons","Vũ khí & Tuyệt Kỹ","Máy tính sức mạnh vũ khí"],["marks","Ấn Ký","16 Ấn Ký và giá trị"],
        ["raid","Raid co-op","5 boss, cách phối hợp"],["beast","Thần Thú Bạch Hổ","5 hình thái, kỹ năng"],["daily","Điểm danh","Lịch 7 ngày, mốc độc quyền"]]
        .map(([id,t,d])=>`<a class="card" href="#${id}"><h4>${I(TITLES[id].i)} ${t}</h4><p>${d}</p></a>`).join("")}
   </div>
@@ -701,10 +709,10 @@ P.start = () => head("start","Làm theo 7 bước của lệnh <code>!start</cod
   <div class="card" style="border-color:#7a5a1d;box-shadow:0 0 30px -12px var(--gold)"><h4>${I("gift")} Hoàn thành</h4><p>${rewardLine({coin:3000,lootbox:2,shards:30})}<br>+ khung <b>Tân Thủ</b> độc quyền</p></div></div>
   <h2>Vòng chơi cơ bản</h2>
   <ul class="li">
-    <li><b>Đi săn</b> <code>!hunt</code> mỗi 15 giây để bắt sinh vật, nhặt ngọc, hộp, Bait và Shards.</li>
+    <li><b>Đi săn</b> <code>!hunt</code> mỗi 7 giây để bắt sinh vật, nhặt ngọc, hộp, Bait và Shards.</li>
     <li><b>Lập đội</b> 3 pet bằng <code>!team add &lt;tên&gt;</code>. Ưu tiên pet hiếm và cân bằng hệ.</li>
     <li><b>Trang bị vũ khí</b> từ Weapon Crate: <code>!use crate all</code> rồi <code>!equip &lt;mã&gt; &lt;pet&gt;</code>.</li>
-    <li><b>Ra trận</b> <code>!battle</code> mỗi 15 giây. Thắng nhận xu, pet lên cấp, có cơ hội nhận Crate (tối đa 3/ngày).</li>
+    <li><b>Ra trận</b> <code>!battle</code> mỗi 10 giây. Thắng nhận xu, pet lên cấp, có cơ hội nhận Crate (tối đa 3/ngày).</li>
     <li><b>Mỗi ngày</b>: <code>!daily</code>, <code>!quest</code>, <code>!vote</code>, 3 lượt <code>!boss fight</code>, leo <code>!tower</code>.</li>
     <li>Khi lên cấp tài khoản 50: mở khóa <a href="#beast">Thần Thú Bạch Hổ</a>.</li>
   </ul>
@@ -737,7 +745,7 @@ P.commands.after = () => {
   const h = sessionStorage.getItem("nsg_focus"); if(h){ sessionStorage.removeItem("nsg_focus"); const el=$("#cmd-"+h); if(el){el.scrollIntoView({block:"center"});el.style.borderColor="var(--crim)";} }
 };
 
-P.pets = () => head("pets","30 loài chia 6 độ hiếm và 5 hệ. Kéo thanh cấp để xem chỉ số thật ở cấp đó (cấp tối đa 100). Bấm một con để xem chi tiết.") + `
+P.pets = () => head("pets","36 loài chia 8 độ hiếm và 5 hệ. Kéo thanh cấp để xem chỉ số thật ở cấp đó (cấp tối đa 100). Bấm một con để xem chi tiết.") + `
   <div class="filters" id="pr"><button class="chip on" data-r="">Tất cả</button>${ORDER.map(k=>`<button class="chip" data-r="${k}">${rIcon(k)} ${RAR[k].n}</button>`).join("")}</div>
   <div class="filters" id="pe"><button class="chip on" data-e="">Mọi hệ</button>${Object.keys(EL).map(k=>`<button class="chip" data-e="${k}">${eIcon(k)} ${EL[k].n}</button>`).join("")}
     <span class="lvl">Cấp <b id="lvv">1</b><input type="range" id="lv" min="1" max="100" value="1"></span></div>
@@ -769,11 +777,11 @@ function petModal(cid, lv){
   const p = PETS.find(x=>x.cid===cid); lv = lv||1;
   const s = pstats(p,lv), s100 = pstats(p,100);
   const beats = BEATS[p.el], weak = Object.keys(BEATS).find(k=>BEATS[k]===p.el);
-  const rate = RAR[p.r].w/RW/5;
+  const rate = p.r==="f"?RAR.f.w/RW/3:RAR[p.r].w/RW/5;
   $("#mbox").innerHTML = `<div class="mhead c-${p.r}"><div class="big">${pIcon(p)}</div><div><h3>${p.name}</h3><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${rp(p.r)} ${ep(p.el)}</div></div><button class="mx" onclick="closeM()">✕</button></div>
   <div class="mbody">
     <div class="kv"><div><small>HP · cấp ${lv}</small><b>${fmt(s.hp)}</b></div><div><small>ATK · cấp ${lv}</small><b>${fmt(s.atk)}</b></div><div><small>DEF · cấp ${lv}</small><b>${fmt(s.df)}</b></div><div><small>SPD · cấp ${lv}</small><b>${s.spd}</b></div></div>
-    <div class="kv"><div><small>Cấp 100</small><b class="mono" style="font-size:14px">${fmt(s100.hp)} / ${fmt(s100.atk)} / ${fmt(s100.df)} / ${s100.spd}</b></div><div><small>Tỉ lệ gặp mỗi lần săn</small><b>${pct(rate,1)}</b></div>
+    <div class="kv"><div><small>Cấp 100</small><b class="mono" style="font-size:14px">${fmt(s100.hp)} / ${fmt(s100.atk)} / ${fmt(s100.df)} / ${s100.spd}</b></div><div><small>Tỉ lệ gặp mỗi lần săn</small><b>${rate?pct(rate,1):"Không săn được"}</b></div>
     <div><small>Bán</small><b>${I("coin")} ${fmt(RAR[p.r].v)}</b></div><div><small>Hiến tế</small><b>${fmt(SAC[p.r])} Essence</b></div></div>
     ${p.el==="dark"?`<p>${eIcon("dark")} Hệ Ám: đánh và bị đánh bởi mọi hệ khác đều ×1.1 sát thương.</p>`:
       `<p>${eIcon(p.el)} Khắc ${ep(beats)} (×1.3) · Bị khắc bởi ${ep(weak)} (×0.8 khi đánh nó)</p>`}
@@ -789,8 +797,9 @@ P.rarity = () => {
   return head("rarity","Tỉ lệ và giá trị lấy trực tiếp từ code. Lucky Gem, Bait, HuntBot Radar và sự kiện Trăng Máu nhân tỉ lệ từ Rare trở lên.") + `
   <h2>Đi săn</h2>
   <div class="tbl"><table><thead><tr><th>Độ hiếm</th><th>Tỉ lệ</th><th>Mỗi loài</th><th>Hệ số chỉ số</th><th>Bán</th><th>Hiến tế</th></tr></thead><tbody>
-  ${ORDER.map(k=>`<tr><td>${rp(k)}</td><td class="n"><b>${pct(RAR[k].w,RW)}</b></td><td class="n">${pct(RAR[k].w/5,RW)}</td><td class="n">×${RAR[k].mult}</td><td class="n">${I("coin")} ${fmt(RAR[k].v)}</td><td class="n">${fmt(SAC[k])} Essence</td></tr>`).join("")}
+  ${ORDER.map(k=>`<tr><td>${rp(k)}</td><td class="n"><b>${RAR[k].w?pct(RAR[k].w,RW):"Không săn được"}</b></td><td class="n">${RAR[k].w?pct(RAR[k].w/(k==="f"?3:5),RW):"—"}</td><td class="n">×${RAR[k].mult}</td><td class="n">${I("coin")} ${fmt(RAR[k].v)}</td><td class="n">${fmt(SAC[k])} Essence</td></tr>`).join("")}
   </tbody></table></div>
+  <div class="note v">${rp("f")} săn được nhưng cực hiếm (~0.001% mỗi lần săn). ${rp("s")} <b>không săn được</b>: chỉ nhận từ MVP Raid (3%), sự kiện hoặc quà. Mỗi độ hiếm có 3 pet riêng; Fabled là bậc mạnh nhất.</div>
   <h2>Lootbox ${I("lootbox")}</h2><p class="mut">Mở ra 1 sinh vật từ Uncommon trở lên.</p>
   <div class="tbl"><table><thead><tr><th>Độ hiếm</th><th>Tỉ lệ</th><th></th></tr></thead><tbody>
   ${Object.entries(LOOTBOX).map(([k,w])=>`<tr><td>${rp(k)}</td><td class="n"><b>${pct(w,LW)}</b></td><td style="width:50%"><div class="bar"><i style="width:${100*w/6200}%;background:var(--r${k})"></i></div></td></tr>`).join("")}
@@ -833,7 +842,7 @@ P.battle = () => head("battle","Trận đấu đội 3 pet theo lượt. Pet nha
   </tbody></table></div>
   <h2>Phần thưởng</h2>
   <ul class="li"><li>Thắng: xu (chuỗi càng dài thưởng càng cao, tối đa ×2), XP cho pet, cộng chuỗi.</li><li>Có cơ hội nhận ${I("crate")} Weapon Crate, tối đa 3 mỗi ngày.</li>
-  <li>Hồi chiêu <code>${cmdTxt("battle")}</code> 15 giây. <code>${cmdTxt("duel @người [cược]")}</code> để đấu người chơi.</li></ul>
+  <li>Hồi chiêu <code>${cmdTxt("battle")}</code> 10 giây. Có 8% gặp đội của người chơi khác (pet hai bên được đưa về cùng cấp), thắng nhận xu ×1.25. <code>${cmdTxt("duel @người [cược]")}</code> để đấu người chơi.</li></ul>
   <h2>Thứ tự tính sát thương</h2>
   <ul class="li"><li>Sát thương ≈ ATK × hệ số hệ × (0.9–1.1) − 50% DEF mục tiêu.</li><li>Chí mạng cơ bản 5%, ×1.8 sát thương. Gale Bow, Bạo Kích Ấn, Ruin cộng thêm.</li>
   <li>40% đòn nhắm con ít máu nhất, còn lại chọn ngẫu nhiên. Khiêu khích (Thành Lũy) ép địch đánh vào mình.</li><li>Tối đa 20 lượt. Hết lượt thì đội còn nhiều % máu hơn thắng.</li></ul>`;
@@ -872,10 +881,11 @@ P.marks = () => head("marks","Ấn Ký gắn sẵn trên vũ khí, cố định 
   </tbody></table></div>
   <div class="note v">${I("bless")} Ấn Ký cộng dồn với phước lành vũ khí của <a href="#bless">Blessing</a> (Amplify, Pierce, Ruin, Frost).</div>`;
 
-P.bless = () => head("bless","Blessing Forge gắn phước lành độc quyền lên pet hoặc vũ khí. Mỗi lần Reroll tốn 3 Nousa Crystal, hồi 8 giây.") + `
+P.bless = () => head("bless","Blessing Forge gắn phước lành độc quyền lên vũ khí. Mỗi lần Reroll tốn 3 Nousa Crystal, hồi 8 giây.") + `
   <h2>Bậc phước lành</h2>
   <div class="grid">${BLESS_T.map(([n,w,id,fb],i)=>`<div class="card"><h4>${ic(id,fb)} Bậc ${n}</h4><p>Tỉ lệ <b style="color:var(--gold)">${w}%</b>${i>=2?" · cần xác nhận khi ghi đè":""}</p></div>`).join("")}</div>
-  <h2>${I("blessPet")} Phước lành Pet</h2>
+  <div class="note r">${I("warn")} <b>Blessing pet đã ngừng</b> để cân bằng trận đấu: không còn tác dụng và không roll mới. Blessing vũ khí vẫn dùng bình thường.</div>
+  <h2>${I("blessPet")} Phước lành Pet (đã ngừng)</h2>
   <div class="tbl"><table><thead><tr><th>Tên</th><th>Hiệu ứng</th><th>I</th><th>II</th><th>III</th><th>Divine</th></tr></thead><tbody>
   ${BLESS_PET.map(b=>`<tr><td>${ic(b[4],b[5])} <b>${b[1]}</b></td><td style="white-space:normal">${b[2].replace("{v}","x")}</td>${b[3].map(v=>`<td class="n">${v}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
   <h2>${I("blessWpn")} Phước lành Vũ khí</h2>
@@ -883,7 +893,7 @@ P.bless = () => head("bless","Blessing Forge gắn phước lành độc quyền
   ${BLESS_WPN.map(b=>`<tr><td>${ic(b[4],b[5])} <b>${b[1]}</b></td><td style="white-space:normal">${b[2].replace("{v}","x")}</td>${b[3].map(v=>`<td class="n">${v}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
   <h2>${I("crystal")} Nguồn Nousa Crystal</h2>
   <ul class="li"><li>Người mới được tặng 3 Crystal để thử.</li><li>Mở Lootbox (12%) và Gem Bag (15%).</li><li>Đánh boss (35%), hạ boss +2.</li><li>Vượt tầng tháp (8%), tầng Thủ Hộ chắc chắn có.</li><li>Điểm danh ngày 7, mốc chuỗi, MVP Raid, vote mỗi 10 lượt.</li></ul>
-  <p>Lệnh: <code>${cmdTxt("bless")}</code> · <code>${cmdTxt("bless pet Cáo Lửa")}</code> · <code>${cmdTxt("bless weapon <mã>")}</code></p>`;
+  <p>Lệnh: <code>${cmdTxt("bless")}</code> · <code>${cmdTxt("bless weapon <mã>")}</code></p>`;
 
 P.economy = () => head("economy","Ba loại tiền trong Nousagi Arena.") + `
   <div class="grid g3">
@@ -932,9 +942,14 @@ P.gamble = () => head("gamble","Chỉ dùng xu ảo. Cược từ 10 đến 50.0
   <tr><td><b>Trùng 2 ô bất kì</b></td><td class="n">—</td><td class="n">×1.5</td></tr></tbody></table></div>
   <div class="note r">${I("lock")} Không mua xu bằng tiền thật và không đổi xu ra tiền thật.</div>`;
 
-P.huntbot = () => head("huntbot","Robot tự đi săn khi bạn vắng mặt. Mở Trạm Thám Hiểm bằng <code>!huntbot</code>, chọn vùng và thời gian (10 phút đến 24 giờ).") + `
+P.huntbot = () => head("huntbot","Robot tự đi săn khi bạn vắng mặt. Mở Trạm Thám Hiểm bằng <code>!huntbot</code>, chọn vùng và chuyến đi theo mốc 1 giờ, 4 giờ, 8 giờ, 12 giờ.") + `
   <h2>5 vùng thám hiểm</h2>
   <div class="grid">${ZONES.map(z=>`<div class="card"><h4>${eIcon(z[0])} ${z[1]}</h4><p>Đặc sản: ${I(z[2])} <b>${z[3]}</b></p></div>`).join("")}</div>
+  <h2>${I("wait")} Mốc chuyến đi</h2>
+  <p class="mut">Chuyến càng dài, giá mỗi phút càng cao (chống lạm phát xu). Mốc 1 giờ luôn có, các mốc sau mở theo trait Duration.</p>
+  <div class="tbl"><table><thead><tr><th>Chuyến</th><th>Giá mỗi phút</th><th>Cần Duration</th></tr></thead><tbody>
+  <tr><td><b>1 giờ</b></td><td class="n">×1</td><td class="n">Mở sẵn</td></tr><tr><td><b>4 giờ</b></td><td class="n">×1.3</td><td class="n">Lv 35</td></tr>
+  <tr><td><b>8 giờ</b></td><td class="n">×1.6</td><td class="n">Lv 75</td></tr><tr><td><b>12 giờ</b></td><td class="n">×2</td><td class="n">Lv 115</td></tr></tbody></table></div>
   <h2>Trait</h2>
   <div class="tbl"><table><thead><tr><th>Trait</th><th>Tác dụng</th><th>Cấp tối đa</th></tr></thead><tbody>
   ${TRAITS.map(t=>`<tr><td>${t[1]==="Radar"?I("radar"):t[1]==="Gain"?I("essence"):t[0]} <b>${t[1]}</b></td><td style="white-space:normal">${t[2]}</td><td class="n">${t[3]}</td></tr>`).join("")}</tbody></table></div>
@@ -975,6 +990,7 @@ P.raid = () => head("raid","1–8 người cùng đánh một Raid Boss trong 10
   <h2>Cơ chế</h2>
   <ul class="li"><li>Boss <b>nổi giận</b> ở 50% máu, <b>cuồng bạo</b> ở 25%.</li><li>Server thắng 3 lần thì boss lên 1 Tier.</li>
   <li>Thưởng chia theo % sát thương, có thưởng đồng đội. <b>MVP</b> nhận thêm Crate + Crystal. Tối đa 3 lượt thưởng mỗi ngày.</li>
+  <li><b>Nghỉ theo server</b>: thắng nghỉ 30 phút, thua nghỉ 1 giờ trước Raid tiếp theo (không né được bằng kênh khác). MVP Raid thắng có 3% nhận pet ${rp("s")} Special.</li>
   <li>Phối hợp tốt thắng ~95–100%, chơi nửa vời 40–75%, bỏ mặc thì thua.</li><li>Độc quyền: nền <b>Long Huyết</b> (MVP 10 lần), khung <b>Diệt Long</b> (thắng 5 lần).</li></ul>`;
 
 P.beast = () => head("beast","Thần thú độc quyền của Nousagi Arena. Mở khóa ở cấp tài khoản 50.") + `
@@ -1034,111 +1050,4 @@ P.cosmetics = () => head("cosmetics","Hình nền và khung cho thẻ <code>!pro
   <h2>Khung</h2><div class="cos">${COS.filter(c=>c[0]==="frame").map(cosCard).join("")}</div>`;
 function cosCard(c){
   const price = c[2]? `${I(c[3]==="shards"?"shard":"coin")} ${fmt(c[2])} · mã <b>${c[7]}</b>` : `<span class="c-l">★ ${c[4]}</span>`;
-  const vis = c[0]==="bg" ? `<div class="sw" style="background:radial-gradient(circle at 70% 30%,${c[5]},transparent 60%),radial-gradient(circle at 20% 90%,${c[5]}88,transparent 55%),#14111f"></div>`
-                          : `<div class="fr"><i style="border-color:${c[5]};box-shadow:0 0 18px ${c[5]}aa"></i></div>`;
-  return `<div class="card">${vis}<h4>${c[1]}</h4><p>${c[6]}</p><p style="margin-top:6px;font-size:13px">${price}</p></div>`;
-}
-
-P.server = () => head("server","Dành cho quản lí server.") + `
-  <div class="grid g3"><div class="card"><h4>${I("server")} ${cmdTxt("server")}</h4><p>Ngôn ngữ mặc định, prefix, kênh chơi mini game, nơi báo lên cấp (tại chỗ / kênh riêng / tắt), kênh thông báo cập nhật & sự kiện, bật/tắt Raid.</p></div>
-  <div class="card"><h4>${I("bell_off")} Tắt bot theo kênh</h4><p><code>${cmdTxt("disable [#kênh|all]")}</code> · <code>${cmdTxt("enable")}</code> · <code>${cmdTxt("disabled")}</code></p></div>
-  <div class="card"><h4>${I("lang")} Ngôn ngữ</h4><p>Tiếng Việt, English, 中文. Mỗi người tự chọn bằng <code>${cmdTxt("lang")}</code>.</p></div>
-  <div class="card"><h4>${I("ticket")} Ticket</h4><p><code>${cmdTxt("ticket")}</code> mở kênh riêng 1-1 với quản lí.</p></div></div>`;
-
-P.changelog = () => head("changelog","Những thay đổi lớn gần đây.") + `
-  <div class="card" style="margin-bottom:12px"><h4><span class="tag">3.1</span> Icon riêng</h4><p>Toàn bộ icon làm riêng (35 icon). Sửa lỗi cửa hàng Thần Thú và Trang trí.</p></div>
-  <div class="card" style="margin-bottom:12px"><h4><span class="tag">3.0</span> Đại Cập Nhật</h4><ul class="li mut" style="font-size:14px">
-    <li>Raid co-op 1–8 người, 5 boss theo ngày, Tier server.</li><li>Điểm danh mới: lịch 7 ngày, mốc 14/30/60/100/200/365, Bùa Giữ Chuỗi, nhắc 20:00.</li>
-    <li>Sự kiện: Mưa Xu, Bão Shard, Trăng Máu, Kho Báu, Đại Huấn Luyện, Raid Cuồng Nộ, Cuối Tuần Rực Lửa.</li><li>Trang trí hồ sơ: 9 nền + 9 khung. Hướng dẫn <code>!start</code>. Vote top.gg.</li>
-    <li><code>!help &lt;lệnh&gt;</code>, gợi ý lệnh khi gõ sai, bảng <code>!server</code>.</li></ul></div>
-  <div class="card" style="margin-bottom:12px"><h4><span class="tag">Hệ vũ khí mới</span> Nộ & Ấn Ký</h4><p>Thanh Nộ, 12 vũ khí với Tuyệt Kỹ riêng, 16 Ấn Ký.</p></div>
-  <div class="card"><h4><span class="tag">Thần Thú</span> Bạch Hổ</h4><p>Boss Bạch Hổ, trứng, 5 hình thái động, kỹ năng Bạch Hổ Hộ Thể, cửa hàng Thần Thú.</p></div>
-  <p style="margin-top:12px">Trong Discord: <code>${cmdTxt("update")}</code> xem bản tin có thẻ ảnh.</p>`;
-
-P.faq = () => head("faq") + [
-  ["Bot không trả lời lệnh?","Kiểm tra bot có quyền đọc và gửi tin nhắn trong kênh, kênh đó không bị <code>!disable</code>, và quản lí chưa giới hạn mini game vào kênh khác trong <code>!server</code>."],
-  ["Prefix là gì?","Mặc định <code>!</code>. Cũng gõ được <code>nhunt</code> hoặc <code>n hunt</code>, và lệnh <code>/</code>. Quản lí có thể đổi prefix trong <code>!server</code>."],
-  ["Làm sao có pet Mythic?","Tỉ lệ mỗi lần săn ~0.008%. Dùng Lucky Gem, Bait, HuntBot Radar và săn trong sự kiện Trăng Máu. Lootbox có 0.1% ra Mythic."],
-  ["Nên dùng vũ khí nào?","Đầu game: Moonlight Sword hoặc Gale Bow cho pet ATK cao. Đội có pet trâu: Stone Shield + Life Staff. Late game: Soul Lantern và Quake Hammer rất mạnh nhờ Tuyệt Kỹ."],
-  ["Thua liên tục ở chuỗi cao?","Bình thường. Địch mạnh dần theo chuỗi thắng (chuỗi 50 còn ~48%). Nâng cấp pet, vũ khí, Blessing và nuôi Bạch Hổ để đẩy chuỗi xa hơn."],
-  ["Xu có đổi ra tiền thật được không?","Không. Mọi tiền tệ chỉ dùng trong game."],
-  ["Báo lỗi hoặc góp ý ở đâu?", CONFIG.SUPPORT_URL?`Vào <a href="${CONFIG.SUPPORT_URL}" target="_blank" rel="noopener">server hỗ trợ</a>.`:"Mở <code>!ticket</code> trong server hoặc nhắn quản lí."]
-].map(([q,a])=>`<div class="card" style="margin-bottom:10px"><h4>${I("quest")} ${q}</h4><p>${a}</p></div>`).join("");
-
-/* =====================================================================
-   TÌM KIẾM
-   ===================================================================== */
-const plain = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/đ/g,"d").replace(/Đ/g,"d").toLowerCase();
-let IDX = [];
-function buildIdx(){
-  IDX = [];
-  Object.entries(TITLES).forEach(([id,t])=>IDX.push({t:t.t,s:"Trang",ic:I(t.i),go:()=>location.hash=id}));
-  CMDS.forEach(c=>IDX.push({t:cmdTxt(c.k),s:c.g,ic:I("quest"),x:c.d+" "+c.al.join(" "),go:()=>{sessionStorage.setItem("nsg_focus",c.k);location.hash="commands";route(true)}}));
-  PETS.forEach(p=>IDX.push({t:p.name,s:RAR[p.r].n+" · "+EL[p.el].n,ic:pIcon(p),go:()=>{location.hash="pets";setTimeout(()=>petModal(p.cid,1),60)}}));
-  Object.entries(WEAP).forEach(([k,w])=>IDX.push({t:w[1],s:"Vũ khí · "+ult(k,0)[0],ic:wIcon(k),x:ult(k,0)[0],go:()=>location.hash="weapons"}));
-  MARKS.forEach(m=>IDX.push({t:m[2],s:"Ấn Ký",ic:ic(m[5],m[1]),x:m[3],go:()=>location.hash="marks"}));
-  Object.values(GEMS).forEach(g=>IDX.push({t:g.n,s:"Ngọc",ic:ic(g.id.r,g.fb),go:()=>location.hash="gems"}));
-  WBOSS.forEach(b=>IDX.push({t:b[0],s:"World Boss",ic:ic(b[3][0],b[8]),go:()=>location.hash="boss"}));
-  TT.forEach(([g,ls])=>ls.forEach(t=>IDX.push({t:t[1],s:"Danh hiệu",ic:I(t[0]),go:()=>location.hash="profile"})));
-  RAID_BOSS.forEach(b=>IDX.push({t:b[0],s:"Raid Boss",ic:eIcon(b[1]),go:()=>location.hash="raid"}));
-  [...BLESS_PET,...BLESS_WPN].forEach(b=>IDX.push({t:b[1],s:"Blessing",ic:ic(b[4],b[5]),x:b[2],go:()=>location.hash="bless"}));
-  COS.forEach(c=>IDX.push({t:c[1],s:c[0]==="bg"?"Hình nền":"Khung",ic:I("title"),go:()=>location.hash="cosmetics"}));
-  FORMS.forEach(f=>IDX.push({t:f[1],s:"Bạch Hổ",ic:I("baiho"),go:()=>location.hash="beast"}));
-  IDX.forEach(o=>o.k=plain(o.t+" "+(o.x||"")+" "+o.s));
-}
-let SEL = 0, HITS = [];
-function doSearch(){
-  const v = plain($("#q").value.trim().replace(/^[!/]/,""));
-  const box = $("#sres");
-  if(!v){box.classList.remove("on");return}
-  HITS = IDX.map(o=>({o,sc:plain(o.t).startsWith(v)?3:plain(o.t).includes(v)?2:o.k.includes(v)?1:0})).filter(h=>h.sc).sort((a,b)=>b.sc-a.sc).slice(0,12).map(h=>h.o);
-  SEL = 0;
-  box.innerHTML = HITS.length ? HITS.map((h,i)=>`<a href="javascript:void 0" data-i="${i}" class="${i?"":"hl"}">${h.ic} <span>${h.t}</span><small>${h.s}</small></a>`).join("") : `<div class="none">Không tìm thấy “${$("#q").value}”</div>`;
-  box.classList.add("on");
-}
-function pick(i){ const h=HITS[i]; if(!h)return; $("#sres").classList.remove("on"); $("#q").value=""; $("#q").blur(); h.go(); }
-
-/* =====================================================================
-   ĐỊNH TUYẾN
-   ===================================================================== */
-function route(force){
-  const id = (location.hash||"#home").slice(1);
-  const r = P[id] ? id : "home";
-  $("#main").innerHTML = `<div class="fade">${P[r]()}${navbox()}</div>`;
-  if(P[r].after) P[r].after();
-  clearTimeout(window._icT);
-  window._icT = setTimeout(()=>document.querySelectorAll("img.ei").forEach(i=>{ if(i.complete && !i.naturalWidth) F(i); }), 4000);
-  document.querySelectorAll(".side a[data-r]").forEach(a=>a.classList.toggle("on",a.dataset.r===r));
-  document.title = (r==="home"?"Nousagi Wiki · Bách khoa Nousagi Arena":TITLES[r].t+" · Nousagi Wiki");
-  document.body.classList.remove("nav");
-  if(!sessionStorage.getItem("nsg_focus")) window.scrollTo({top:0});
-}
-
-/* =====================================================================
-   KHỞI ĐỘNG
-   ===================================================================== */
-buildSide(); buildIdx();
-$("#inviteTop").href = invite();
-if(CONFIG.INVITE_URL){ $("#inviteTop").target="_blank"; $("#inviteTop").rel="noopener"; }
-else $("#inviteTop").onclick = e => { e.preventDefault(); toast("Chủ bot chưa dán link mời trong CONFIG"); };
-$("#burger").onclick = () => document.body.classList.toggle("nav");
-$("#scrim").onclick = () => document.body.classList.remove("nav");
-$("#modal").onclick = e => { if(e.target.id==="modal") closeM(); };
-$("#q").oninput = doSearch;
-$("#q").onkeydown = e => {
-  const as = $("#sres").querySelectorAll("a");
-  if(e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault(); if(!as.length)return; SEL=(SEL+(e.key==="ArrowDown"?1:-1)+as.length)%as.length; as.forEach((a,i)=>a.classList.toggle("hl",i===SEL)); as[SEL].scrollIntoView({block:"nearest"}); }
-  else if(e.key==="Enter"){ e.preventDefault(); pick(SEL); }
-  else if(e.key==="Escape"){ $("#sres").classList.remove("on"); }
-};
-$("#sres").onclick = e => { const a=e.target.closest("a[data-i]"); if(a) pick(+a.dataset.i); };
-document.addEventListener("click", e => { if(!e.target.closest(".search")) $("#sres").classList.remove("on"); });
-document.addEventListener("keydown", e => {
-  if(e.key==="Escape") closeM();
-  if(e.key==="/" && document.activeElement.tagName!=="INPUT"){ e.preventDefault(); $("#q").focus(); }
-});
-window.addEventListener("hashchange", () => route());
-route();
-</script>
-</body>
-</html>
+  const vis = c[0]==="bg" ? `<div class="sw" style="backgr
